@@ -1,0 +1,29 @@
+{
+	"name": "server-worker",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kacpep/server-worker.git"
+	},
+	"keywords": [
+		"discord",
+		"server",
+		"nginx"
+	],
+	"author": "kacpep",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/kacpep/server-worker/issues"
+	},
+	"homepage": "https://github.com/kacpep/server-worker#readme",
+	"dependencies": {
+		"discord.js": "^14.7.1",
+		"dotenv": "^16.0.3"
+	}
+}
