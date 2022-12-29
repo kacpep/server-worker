@@ -1,6 +1,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
+const {
+	Client,
+	Collection,
+	Events,
+	GatewayIntentBits,
+} = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
 
@@ -26,14 +31,31 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
 	if (interaction.commandName === "domain") {
-		domain =  interaction.options.getString("name");
-		require("./src/actions/domainOptions").go(interaction);
+		domain = interaction.options.getString("name");
+		require("./src/actions/domainOptions").manage(interaction);
 	}
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
+	if (
+		interaction.customId === "add" ||
+		interaction.customId === "remove" ||
+		interaction.customId === "update"
+	) {
+		interaction.message.delete();
+	}
 	if (interaction.customId === "add") {
+		require("./src/actions/domainAdd").protocol(interaction, domain);
+	}
+	if (interaction.customId === "remove") {
+		require("./src/actions/domainRemove").remove(interaction, domain);
+	}
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isStringSelectMenu()) return;
+	if (interaction.customId === "selectProtocol") {
 		require("./src/actions/domainAdd").add(interaction, domain);
 	}
 });

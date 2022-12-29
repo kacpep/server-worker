@@ -5,7 +5,7 @@ const {
 	EmbedBuilder,
 } = require("discord.js");
 
-async function go(interaction) {
+async function manage(interaction) {
 	let domainName = interaction.options.getString("name");
 	const domainEmbed = new EmbedBuilder()
 		.setColor(0x0099ff)
@@ -45,13 +45,13 @@ async function go(interaction) {
 				.setLabel("update")
 				.setEmoji("⚙️")
 				.setStyle(ButtonStyle.Secondary)
+				
 		);
 
 	await interaction.reply({
 		embeds: [domainEmbed],
 		components: [btns],
 	});
-	
 }
 
-module.exports = { go };
+module.exports = { manage };
