@@ -14,5 +14,10 @@ module.exports = {
 		)
 		.addSubcommand((option) =>
 			option.setName("list").setDescription("All enabled domains.")
+		)
+		.addSubcommand((option) =>
+			option
+				.setName("certificates")
+				.setDescription("Certificate of all domains.")
 		),
 };

@@ -27,13 +27,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === "domain") {
 		let subCommand = interaction.options.getSubcommand();
-		console.log(subCommand)
 		if (subCommand == "manage") {
 			domain = interaction.options.getString("name");
 			require("./src/actions/domainOptions").manage(interaction, domain);
 		}
 		if (subCommand == "list") {
 			require("./src/actions/domainList").list(interaction);
+		}
+		if (subCommand == "certificates") {
+			require("./src/actions/domainList").certificates(interaction);
 		}
 	}
 });
