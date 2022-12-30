@@ -24,16 +24,6 @@ Bot on discord for web server management.
   npm i
 ```
 
-## System requirements
-
-Operating system `linux`
-
-You must have installed `nodejs | npm | sudo | nginx | certbot | python3-certbot-nginx | `
-
-## Tested
-
-Tested on `Debian GNU/Linux 9.13 `
-
 #### Edit .env ⚒️
 ```env
 DISCORD_TOKEN=
@@ -49,6 +39,15 @@ CLIENT_ID=
 
 ### Invite the bot to the server ~ ready! Have fun!🎟️
 
+## System requirements
+
+Operating system `linux`
+
+You must have installed `nodejs | npm | sudo | nginx | certbot | python3-certbot-nginx | `
+
+## Tested
+
+Tested on `Debian GNU/Linux 9.13 `
 
 ## Authors
 
