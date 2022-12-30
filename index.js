@@ -1,11 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const {
-	Client,
-	Collection,
-	Events,
-	GatewayIntentBits,
-} = require("discord.js");
+const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
 
@@ -43,7 +38,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		interaction.customId === "remove" ||
 		interaction.customId === "update"
 	) {
-		interaction.message.delete();
+		await interaction.message.delete();
+		await interaction.deferReply();
 	}
 	if (interaction.customId === "add") {
 		require("./src/actions/domainAdd").protocol(interaction, domain);
@@ -51,12 +47,23 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.customId === "remove") {
 		require("./src/actions/domainRemove").remove(interaction, domain);
 	}
+	if (interaction.customId === "update") {
+		require("./src/actions/domainUpdate").updateManage(interaction, domain);
+	}
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isStringSelectMenu()) return;
 	if (interaction.customId === "selectProtocol") {
-		require("./src/actions/domainAdd").add(interaction, domain);
+		await interaction.message.delete();
+
+		await interaction.deferReply();
+
+		if (interaction.values == 443) {
+			require("./src/actions/domainAdd").addHTTPS(interaction, domain);
+		} else {
+			require("./src/actions/domainAdd").addHTTP(interaction, domain);
+		}
 	}
 });
 

@@ -8,7 +8,7 @@ const {
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 
 async function protocol(interaction, domain) {
 	if (!(await checkExists(interaction, domain))) return;
@@ -47,7 +47,7 @@ async function protocol(interaction, domain) {
 			)
 	);
 
-	await interaction.reply({
+	await interaction.editReply({
 		embeds: [domainEmbed],
 		components: [selectMenu],
 	});
@@ -98,7 +98,7 @@ async function checkExists(interaction, domain) {
 					.setStyle(ButtonStyle.Secondary)
 			);
 
-		await interaction.reply({
+		await interaction.editReply({
 			embeds: [Embed],
 			components: [btns],
 		});
@@ -132,9 +132,7 @@ async function error(interaction, domain, err) {
 	return true;
 }
 
-async function add(interaction, domain) {
-	await interaction.message.delete();
-
+async function addHTTP(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
 	const availablPath = path.join("/etc/nginx/sites-available", domain);
 	const enabledPath = path.join("/etc/nginx/sites-enabled", domain);
@@ -148,31 +146,90 @@ async function add(interaction, domain) {
 	fs.link(availablPath, enabledPath, (er) => {
 		console.log(er);
 	});
-	exec("nginx -t", async (err, stdout, stderr) => {
-		if (err) {
-			console.log(`error: ${err.message}`);
-			if (await error(interaction, domain, err.message)) return;
 
-			return;
-		}
-		if (stderr) {
-			console.log(`stderr: ${stderr}`);
-			exec("sudo systemctl restart nginx", async (err, stdout, stderr) => {
-				if (err) {
-					if (await error(interaction, domain, err.message)) return;
-					console.log(`error: ${err.message}`);
-					return;
-				}
-				if (stderr) {
-					console.log(`stderr: ${stderr}`);
-					return;
-				}
-				console.log(`stdout: ${stdout}`);
-			});
-			return;
-		}
-		console.log(`stdout: ${stdout}`);
+	execSync("nginx -t", { encoding: "utf8" });
+	execSync("sudo systemctl restart nginx", {
+		encoding: "utf8",
 	});
+
+	fs.copyFileSync(
+		path.join(__dirname, "/../templates/index.html"),
+		path.join(publicHtml, "index.html"),
+		fs.constants.COPYFILE_EXCL
+	);
+	const Embed = new EmbedBuilder()
+		.setColor(0x00ff00)
+		.setTitle("Success")
+		.setDescription(`Domain is deployed!`)
+		.setURL(`http://${domain}`)
+		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+		.addFields({
+			name: "Domain name:",
+			value: `${domain}`,
+			inline: true,
+		})
+		.setTimestamp()
+		.setFooter({
+			text: "made by ~ kacpep.dev",
+			iconURL: "https://i.imgur.com/M0uWxCA.png",
+		});
+
+	await interaction.editReply({
+		content: "",
+		embeds: [Embed],
+		components: [],
+	});
+}
+async function addHTTPS(interaction, domain) {
+	const filePath = path.join("/var/www", domain);
+	const availablPath = path.join("/etc/nginx/sites-available", domain);
+	const enabledPath = path.join("/etc/nginx/sites-enabled", domain);
+	const publicHtml = path.join(filePath, "public_html");
+
+	fs.mkdirSync(publicHtml, { recursive: true });
+	fs.writeFileSync(
+		availablPath,
+		eval(
+			fs.readFileSync(path.join(__dirname, "/../templates/nginxHTTP"), "utf8")
+		)
+	);
+	fs.link(availablPath, enabledPath, (er) => {
+		console.log(er);
+	});
+
+	execSync("nginx -t", { encoding: "utf8" });
+	execSync("sudo systemctl restart nginx", {
+		encoding: "utf8",
+	});
+
+	let sameCertificates = fs
+		.readdirSync("/etc/letsencrypt/live/")
+		.filter((file) => file.startsWith(domain));
+	sameCertificates.unshift(domain);
+
+	let certificate = sameCertificates[sameCertificates.length - 1];
+
+	execSync(
+		`certbot certonly --noninteractive --nginx --agree-tos --register-unsafely-without-email -d ${domain}`,
+		{ encoding: "utf8" }
+	);
+
+	fs.writeFileSync(
+		availablPath,
+		eval(
+			fs.readFileSync(path.join(__dirname, "/../templates/nginxHTTPS"), "utf8")
+		)
+	);
+
+	execSync("nginx -t", { encoding: "utf8" });
+	execSync("sudo systemctl restart nginx", {
+		encoding: "utf8",
+	});
+	fs.copyFileSync(
+		path.join(__dirname, "/../templates/index.html"),
+		path.join(publicHtml, "index.html"),
+		fs.constants.COPYFILE_EXCL
+	);
 
 	const Embed = new EmbedBuilder()
 		.setColor(0x00ff00)
@@ -191,11 +248,11 @@ async function add(interaction, domain) {
 			iconURL: "https://i.imgur.com/M0uWxCA.png",
 		});
 
-	await interaction.reply({
+	await interaction.editReply({
 		content: "",
 		embeds: [Embed],
 		components: [],
 	});
 }
 
-module.exports = { protocol, checkExists, add };
+module.exports = { protocol, checkExists, addHTTP, addHTTPS };

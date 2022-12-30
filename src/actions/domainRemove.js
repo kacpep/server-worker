@@ -6,20 +6,34 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 } = require("discord.js");
+const { execSync } = require("child_process");
 
 async function remove(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
 	const availablPath = path.join("/etc/nginx/sites-available", domain);
 	const enabledPath = path.join("/etc/nginx/sites-enabled", domain);
+	const certificateSite = path.join("/etc/letsencrypt/live/", domain);
+
 	const publicHtml = path.join(filePath, "public_html");
 	if (
 		fs.existsSync(filePath) ||
 		fs.existsSync(availablPath) ||
-		fs.existsSync(enabledPath)
+		fs.existsSync(enabledPath) ||
+		fs.existsSync(certificateSite)
 	) {
 		try {
 			fs.rmSync(filePath, { recursive: true, force: true });
 		} catch {}
+		try {
+			execSync(
+				`certbot delete --nginx --noninteractive --cert-name ${domain}`,
+				{
+					encoding: "utf8",
+				}
+			);
+		} catch {}
+
+		// fs.rmSync(certificateSite, { recursive: true, force: true });
 
 		try {
 			fs.rmSync(availablPath, { recursive: true, force: true });
@@ -43,7 +57,7 @@ async function remove(interaction, domain) {
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
 
-		await interaction.reply({
+		await interaction.editReply({
 			embeds: [Embed],
 			components: [],
 		});
@@ -78,7 +92,7 @@ async function remove(interaction, domain) {
 					.setEmoji("⚙️")
 					.setStyle(ButtonStyle.Secondary)
 			);
-		await interaction.reply({
+		await interaction.editReply({
 			embeds: [Embed],
 			components: [btns],
 		});
