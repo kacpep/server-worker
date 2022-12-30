@@ -29,6 +29,8 @@ Bot on discord for web server management.
 DISCORD_TOKEN=
 GUILD_ID=
 CLIENT_ID=
+CHANNEL_NAME=server-worker
+CATEGORY_NAME=WEB DEV
 ```
 
 #### Start the server 😜
