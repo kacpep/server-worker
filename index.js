@@ -29,6 +29,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		domain = interaction.options.getString("name");
 		require("./src/actions/domainOptions").manage(interaction);
 	}
+	if (interaction.commandName === "server") {
+		task = interaction.options.getString("task");
+		if (task == "domainlist") {
+		} else if (task == "certificates") {
+		}
+		
+	}
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -45,10 +52,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		require("./src/actions/domainAdd").protocol(interaction, domain);
 	}
 	if (interaction.customId === "remove") {
-		require("./src/actions/domainRemove").remove(interaction, domain);
+		require("./src/actions/domainRemove").definitely(interaction, domain);
 	}
 	if (interaction.customId === "update") {
 		require("./src/actions/domainUpdate").updateManage(interaction, domain);
+	}
+	if (interaction.customId === "removesure") {
+		require("./src/actions/domainRemove").remove(interaction, domain);
+	}
+	if (interaction.customId === "cancelremove") {
+		await interaction.message.delete();
 	}
 });
 
