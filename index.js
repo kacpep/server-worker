@@ -26,15 +26,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
 	if (interaction.commandName === "domain") {
-		domain = interaction.options.getString("name");
-		require("./src/actions/domainOptions").manage(interaction);
-	}
-	if (interaction.commandName === "server") {
-		task = interaction.options.getString("task");
-		if (task == "domainlist") {
-		} else if (task == "certificates") {
+		let subCommand = interaction.options.getSubcommand();
+		console.log(subCommand)
+		if (subCommand == "manage") {
+			domain = interaction.options.getString("name");
+			require("./src/actions/domainOptions").manage(interaction, domain);
 		}
-		
+		if (subCommand == "list") {
+			require("./src/actions/domainList").list(interaction);
+		}
 	}
 });
 
