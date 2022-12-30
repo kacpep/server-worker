@@ -1,6 +1,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { EmbedBuilder } = require("discord.js");
+const {
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+} = require("discord.js");
 
 async function remove(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
@@ -58,10 +63,24 @@ async function remove(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
-
+		const btns = new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId("add")
+					.setEmoji("🔨")
+					.setLabel("add")
+					.setStyle(ButtonStyle.Success)
+			)
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId("update")
+					.setLabel("update")
+					.setEmoji("⚙️")
+					.setStyle(ButtonStyle.Secondary)
+			);
 		await interaction.reply({
 			embeds: [Embed],
-			components: [],
+			components: [btns],
 		});
 	}
 }

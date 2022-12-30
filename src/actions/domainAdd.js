@@ -2,6 +2,8 @@ const {
 	ActionRowBuilder,
 	StringSelectMenuBuilder,
 	EmbedBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 } = require("discord.js");
 
 const fs = require("node:fs");
@@ -80,10 +82,25 @@ async function checkExists(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
+		const btns = new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId("remove")
+					.setLabel("remove")
+					.setEmoji("💥")
+					.setStyle(ButtonStyle.Danger)
+			)
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId("update")
+					.setLabel("update")
+					.setEmoji("⚙️")
+					.setStyle(ButtonStyle.Secondary)
+			);
 
 		await interaction.reply({
 			embeds: [Embed],
-			components: [],
+			components: [btns],
 		});
 		return false;
 	} else {
@@ -116,7 +133,7 @@ async function error(interaction, domain, err) {
 }
 
 async function add(interaction, domain) {
-	interaction.message.delete();
+	await interaction.message.delete();
 
 	const filePath = path.join("/var/www", domain);
 	const availablPath = path.join("/etc/nginx/sites-available", domain);
@@ -131,19 +148,19 @@ async function add(interaction, domain) {
 	fs.link(availablPath, enabledPath, (er) => {
 		console.log(er);
 	});
-	exec("nginx -t", async (er, stdout, stderr) => {
-		if (error) {
-			console.log(`error: ${error.message}`);
-			// if (await error(interaction, domain, error.message)) return;
+	exec("nginx -t", async (err, stdout, stderr) => {
+		if (err) {
+			console.log(`error: ${err.message}`);
+			if (await error(interaction, domain, err.message)) return;
 
 			return;
 		}
 		if (stderr) {
 			console.log(`stderr: ${stderr}`);
-			exec("sudo systemctl restart nginx", async (er, stdout, stderr) => {
-				if (error) {
-					// if (await error(interaction, domain, error.message)) return;
-					console.log(`error: ${error.message}`);
+			exec("sudo systemctl restart nginx", async (err, stdout, stderr) => {
+				if (err) {
+					if (await error(interaction, domain, err.message)) return;
+					console.log(`error: ${err.message}`);
 					return;
 				}
 				if (stderr) {
