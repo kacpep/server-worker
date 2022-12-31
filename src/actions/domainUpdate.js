@@ -2,6 +2,8 @@ const {
 	ActionRowBuilder,
 	EmbedBuilder,
 	ButtonBuilder,
+	ModalBuilder,
+	TextInputBuilder,
 	TextInputStyle,
 	StringSelectMenuBuilder,
 	ButtonStyle,
@@ -66,7 +68,7 @@ async function selectChangeProtocol(interaction, domain) {
 	if (
 		(await countLines(
 			fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
-		)) <= 11
+		)) <= 10
 	) {
 		currentProtocol = "HTTP";
 		descriptionHTTP = "Current";
@@ -244,10 +246,128 @@ async function changeToHTTPS(interaction, domain) {
 		components: [],
 	});
 }
+async function selectPortForwarding(interaction, domain) {
+	const modal = new ModalBuilder()
+		.setCustomId("modalPortForwarding")
+		.setTitle("Set forwarding prot")
+		.addComponents(
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId("newPort")
+					.setLabel("What port do you want to redirect to?")
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(7)
+					.setPlaceholder("3000 or default")
+			)
+		);
+	await interaction.showModal(modal);
+}
+async function portForwarding(interaction, domain) {
+	let port = interaction.fields.getTextInputValue("newPort");
+	if (port != "default") {
+		const availablPath = path.join("/etc/nginx/sites-available", domain);
+		let file = fs.readFileSync(availablPath, "utf8");
+		if (/location(.*?\s*)#ZW5k/gm.test(file)) {
+			await interaction.deferReply();
 
+			fs.writeFileSync(
+				availablPath,
+				file.replace(
+					/location(.*?\s*)#ZW5k/gm,
+					eval(
+						fs.readFileSync(
+							path.join(__dirname, "/../templates/nginxPortForwarding"),
+							"utf8"
+						)
+					)
+				)
+			);
+			execSync("nginx -t", { encoding: "utf8" });
+			execSync("sudo systemctl restart nginx", {
+				encoding: "utf8",
+			});
+			const Embed = new EmbedBuilder()
+				.setColor(0x00ff00)
+				.setTitle("!Success!")
+				.setDescription(`Port forwarding done!`)
+				.setURL(`http://${domain}`)
+				.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+				.addFields({
+					name: "Domain name:",
+					value: `${domain}`,
+					inline: true,
+				})
+				.setTimestamp()
+				.setFooter({
+					text: "made by ~ kacpep.dev",
+					iconURL: "https://i.imgur.com/M0uWxCA.png",
+				});
+
+			await interaction.editReply({
+				content: "",
+				embeds: [Embed],
+				components: [],
+			});
+		} else {
+			await interaction.deferReply({ ephemeral: true });
+
+			await interaction.editReply({
+				content: "Error I can't change the port. try: remove and add domain",
+				ephemeral: true,
+			});
+		}
+	} else {
+		const availablPath = path.join("/etc/nginx/sites-available", domain);
+		let file = fs.readFileSync(availablPath, "utf8");
+
+		await interaction.deferReply();
+
+		fs.writeFileSync(
+			availablPath,
+			file.replace(
+				/location(.*?\s*)#ZW5k/gm,
+				eval(
+					fs.readFileSync(
+						path.join(__dirname, "/../templates/nginxPortDefault"),
+						"utf8"
+					)
+				)
+			)
+		);
+		execSync("nginx -t", { encoding: "utf8" });
+		execSync("sudo systemctl restart nginx", {
+			encoding: "utf8",
+		});
+		const Embed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle("!Success!")
+			.setDescription(`Port forwarding done!`)
+			.setURL(`http://${domain}`)
+			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+			.addFields({
+				name: "Domain name:",
+				value: `${domain}`,
+				inline: true,
+			})
+			.setTimestamp()
+			.setFooter({
+				text: "made by ~ kacpep.dev",
+				iconURL: "https://i.imgur.com/M0uWxCA.png",
+			});
+
+		await interaction.editReply({
+			content: "",
+			embeds: [Embed],
+			components: [],
+		});
+	}
+}
 module.exports = {
 	updateManage,
 	selectChangeProtocol,
 	changeToHTTP,
 	changeToHTTPS,
+	selectPortForwarding,
+	portForwarding,
 };

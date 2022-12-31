@@ -136,6 +136,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			domain
 		);
 	}
+	if (interaction.customId === "portForwarding") {
+		require("./src/actions/domainUpdate").selectPortForwarding(
+			interaction,
+			domain
+		);
+	}
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -158,7 +164,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (
 				(await countLines(
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
-				)) <= 11
+				)) <= 10
 			) {
 				await interaction.deferReply({ ephemeral: false });
 
@@ -178,7 +184,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (
 				!(await countLines(
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
-				)) <= 11
+				)) <= 10
 			) {
 				await interaction.deferReply({ ephemeral: false });
 
@@ -191,6 +197,26 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					ephemeral: true,
 				});
 			}
+		}
+	}
+});
+
+client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isModalSubmit()) return;
+	await interaction.message.delete();
+
+	if (interaction.customId === "modalPortForwarding") {
+		let port = interaction.fields.getTextInputValue("newPort");
+		if (isNaN(port) && port != "default") {
+			await interaction.deferReply({ ephemeral: true });
+
+			interaction.editReply({
+				content: "Port must be a number!",
+				ephemeral: true,
+			});
+			return;
+		} else {
+			require("./src/actions/domainUpdate").portForwarding(interaction, domain);
 		}
 	}
 });
