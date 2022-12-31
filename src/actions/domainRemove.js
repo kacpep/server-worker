@@ -44,7 +44,7 @@ async function remove(interaction, domain) {
 		} catch {}
 		const Embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle("!Success")
+			.setTitle("!Success!")
 			.setDescription(`Files deleted.`)
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 			.addFields({
@@ -65,7 +65,7 @@ async function remove(interaction, domain) {
 	} else {
 		const Embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle("!Error ")
+			.setTitle("!Error!")
 			.setDescription(`Error files doesn't exists.`)
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 			.addFields({
@@ -102,7 +102,7 @@ async function remove(interaction, domain) {
 async function definitely(interaction, domain) {
 	const Embed = new EmbedBuilder()
 		.setColor(0xff0000)
-		.setTitle("?Are you sure")
+		.setTitle("?Are you sure?")
 		.setDescription(`Are you sure you want to delete ${domain}`)
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({

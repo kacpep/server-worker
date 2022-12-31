@@ -9,7 +9,19 @@ const {
 } = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
+const readline = require("node:readline");
+async function countLines(input) {
+	let lineCount = 0;
 
+	for await (const _ of readline.createInterface({
+		input,
+		crlfDelay: Infinity,
+	})) {
+		lineCount++;
+	}
+
+	return lineCount;
+}
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 var domain = "";
 client.commands = new Collection();
@@ -56,15 +68,14 @@ client.once(Events.ClientReady, async () => {
 			})
 			.then((channel) => {
 				channel.setParent(category.id);
-			})
-			
+			});
 	}
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-	console.log(client.channels.cache.get(interaction.channelId).name);
 	if (
-		client.channels.cache.get(interaction.channelId).name == process.env.CHANNEL_NAME
+		client.channels.cache.get(interaction.channelId).name ==
+		process.env.CHANNEL_NAME
 	) {
 		if (!interaction.isChatInputCommand()) return;
 
@@ -98,7 +109,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (
 		interaction.customId === "add" ||
 		interaction.customId === "remove" ||
-		interaction.customId === "update"
+		interaction.customId === "update" ||
+		interaction.customId === "changeProtocol"
 	) {
 		await interaction.message.delete();
 		await interaction.deferReply();
@@ -115,8 +127,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.customId === "removesure") {
 		require("./src/actions/domainRemove").remove(interaction, domain);
 	}
-	if (interaction.customId === "cancelremove") {
+	if (interaction.customId === "cancel") {
 		await interaction.message.delete();
+	}
+	if (interaction.customId === "changeProtocol") {
+		require("./src/actions/domainUpdate").selectChangeProtocol(
+			interaction,
+			domain
+		);
 	}
 });
 
@@ -131,6 +149,48 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			require("./src/actions/domainAdd").addHTTPS(interaction, domain);
 		} else {
 			require("./src/actions/domainAdd").addHTTP(interaction, domain);
+		}
+	}
+	if (interaction.customId === "selectChangeProtocol") {
+		await interaction.message.delete();
+
+		if (interaction.values == 443) {
+			if (
+				(await countLines(
+					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
+				)) <= 11
+			) {
+				await interaction.deferReply({ ephemeral: false });
+
+				require("./src/actions/domainUpdate").changeToHTTPS(
+					interaction,
+					domain
+				);
+			} else {
+				await interaction.deferReply({ ephemeral: true });
+
+				await interaction.editReply({
+					content: `You cannot change the protocol to the same!`,
+					ephemeral: true,
+				});
+			}
+		} else {
+			if (
+				!(await countLines(
+					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
+				)) <= 11
+			) {
+				await interaction.deferReply({ ephemeral: false });
+
+				require("./src/actions/domainUpdate").changeToHTTP(interaction, domain);
+			} else {
+				await interaction.deferReply({ ephemeral: true });
+
+				await interaction.editReply({
+					content: `You cannot change the protocol to the same!`,
+					ephemeral: true,
+				});
+			}
 		}
 	}
 });

@@ -1,8 +1,6 @@
-
 # Server Worker ⚙️
 
 Bot on discord for web server management.
-
 
 ## Run Locally
 
@@ -15,16 +13,17 @@ Bot on discord for web server management.
 #### Go to the project directory 🔮
 
 ```bash
-  cd server-worker 
+  cd server-worker
 ```
 
 #### Install dependencies 🙏
 
-```bash 
+```bash
   npm i
 ```
 
 #### Edit .env ⚒️
+
 ```env
 DISCORD_TOKEN=
 GUILD_ID=
@@ -34,7 +33,7 @@ CATEGORY_NAME=WEB DEV
 ```
 
 #### Start the server 😜
- 
+
 ```bash
   npm start
 ```
@@ -54,4 +53,3 @@ Tested on `Debian GNU/Linux 9.13 `
 ## Authors
 
 - [@kacpep](https://www.github.com/kacpep) 😇
-
