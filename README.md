@@ -7,7 +7,7 @@ with linux nodejs, npm, nginx, certbot installation
 and download and run the bot. Change data in .env 
 and then add domains with bot.
 
-## Run Locally
+## Run Locally ⌚
 
 #### Clone the project ©️
 
@@ -45,20 +45,20 @@ CATEGORY_NAME=WEB DEV
 
 ### Invite the bot to the server ~ ready! Have fun!🎟️
 
-### System requirements
+### System requirements 💽
 
 Operating system `linux`
 
 You must have installed `nodejs | npm | sudo | nginx | certbot | python3-certbot-nginx | `
 
-### Tested
+### Tested 🐧
 
 Tested on `Debian GNU/Linux 9.13 `
 
-### Versions:
+### Versions 🆕
 
-`v1.0.0` ~ important commands
+`v1.0.0` ~ important commands ❗
 
-## Authors
+## Authors 👷‍♂️
 
 - [@kacpep](https://www.github.com/kacpep) 😇
