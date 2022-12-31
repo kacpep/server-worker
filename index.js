@@ -6,6 +6,7 @@ const {
 	Events,
 	GatewayIntentBits,
 	ChannelType,
+	ActivityType,
 } = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
@@ -23,7 +24,6 @@ async function countLines(input) {
 	return lineCount;
 }
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-var domain = "";
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, "src/commands");
 const commandFiles = fs
@@ -38,6 +38,9 @@ for (const file of commandFiles) {
 
 client.once(Events.ClientReady, async () => {
 	console.log("Ready!");
+	
+	client.user.setActivity("better side..", { type: ActivityType.Watching });
+	
 	guild = client.guilds.cache.get(process.env.GUILD_ID);
 	if (
 		!guild.channels.cache.find(
@@ -103,9 +106,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		});
 	}
 });
-
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
+	let domain = interaction.message.embeds[0].data.fields[0].value;
+
 	if (
 		interaction.customId === "add" ||
 		interaction.customId === "remove" ||
@@ -146,6 +150,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isStringSelectMenu()) return;
+	let domain = interaction.message.embeds[0].data.fields[0].value;
+
 	if (interaction.customId === "selectProtocol") {
 		await interaction.message.delete();
 
@@ -203,6 +209,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return;
+	let domain = interaction.message.embeds[0].data.fields[0].value;
 	await interaction.message.delete();
 
 	if (interaction.customId === "modalPortForwarding") {
@@ -222,3 +229,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+process.on("uncaughtException", (error) => {
+	console.log("-----handler-------");
+	console.log(error);
+	console.log("-----handler-------");
+	process.exit(1);
+});

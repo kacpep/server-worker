@@ -1,6 +1,6 @@
 {
 	"name": "server-worker",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -17,7 +17,7 @@
 		"nginx"
 	],
 	"author": "kacpep",
-	"license": "MIT",
+	"license": "LICENSE",
 	"bugs": {
 		"url": "https://github.com/kacpep/server-worker/issues"
 	},
