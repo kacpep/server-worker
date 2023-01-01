@@ -1,5 +1,10 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const nconf = require("nconf");
+
+const configPath = path.join(__dirname, "src/configs/config.json");
+nconf.file({ file: configPath });
+
 const {
 	Client,
 	Collection,
@@ -38,35 +43,35 @@ for (const file of commandFiles) {
 
 client.once(Events.ClientReady, async () => {
 	console.log("Ready!");
-	
+
 	client.user.setActivity("better side..", { type: ActivityType.Watching });
-	
+
 	guild = client.guilds.cache.get(process.env.GUILD_ID);
 	if (
 		!guild.channels.cache.find(
 			(channel) =>
 				channel.type == ChannelType.GuildCategory &&
-				channel.name == process.env.CATEGORY_NAME
+				channel.name == nconf.get("categoryName")
 		)
 	) {
 		await guild.channels.create({
-			name: process.env.CATEGORY_NAME,
+			name: nconf.get("categoryName"),
 			type: ChannelType.GuildCategory,
 		});
 	}
 	let category = await guild.channels.cache.find(
 		(channel) =>
 			channel.type == ChannelType.GuildCategory &&
-			channel.name == process.env.CATEGORY_NAME
+			channel.name == nconf.get("categoryName")
 	);
 	if (
 		!guild.channels.cache.find(
-			(c) => c.name.toLowerCase() === process.env.CHANNEL_NAME
+			(c) => c.name.toLowerCase() === nconf.get("channelName")
 		)
 	) {
 		guild.channels
 			.create({
-				name: process.env.CHANNEL_NAME,
+				name: nconf.get("channelName"),
 				type: ChannelType.GuildText,
 			})
 			.then((channel) => {
@@ -78,7 +83,7 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (
 		client.channels.cache.get(interaction.channelId).name ==
-		process.env.CHANNEL_NAME
+		nconf.get("channelName")
 	) {
 		if (!interaction.isChatInputCommand()) return;
 
@@ -95,11 +100,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				require("./src/actions/domainList").certificates(interaction);
 			}
 		}
+		if (interaction.commandName === "webserver") {
+			let subCommand = interaction.options.getSubcommand();
+			if (subCommand == "off") {
+				require("./src/actions/serverManage").off(interaction);
+			}
+			if (subCommand == "on") {
+				require("./src/actions/serverManage").on(interaction);
+			}
+		
+		}
 	} else {
 		interaction.reply({
 			content: `Wrong channel. Correct: 👉 <#${
 				guild.channels.cache.find(
-					(c) => c.name.toLowerCase() === process.env.CHANNEL_NAME
+					(c) => c.name.toLowerCase() === nconf.get("channelName")
 				).id
 			}>`,
 			ephemeral: true,
