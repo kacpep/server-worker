@@ -3,7 +3,9 @@ const path = require("node:path");
 const nconf = require("nconf");
 
 const configPath = path.join(__dirname, "src/configs/config.json");
-nconf.file({ file: configPath });
+nconf.file("default", configPath);
+
+let root = nconf.get("root");
 
 const {
 	Client,
@@ -81,36 +83,21 @@ client.once(Events.ClientReady, async () => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+	if (!interaction.isChatInputCommand()) return;
+	nconf.file("default", configPath);
+	let users = Object.assign([], nconf.get("users"));
+
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+		interaction.reply({
+			content: `You are not authorized!`,
+			ephemeral: true,
+		});
+		return;
+	}
 	if (
-		client.channels.cache.get(interaction.channelId).name ==
+		client.channels.cache.get(interaction.channelId).name !=
 		nconf.get("channelName")
 	) {
-		if (!interaction.isChatInputCommand()) return;
-
-		if (interaction.commandName === "domain") {
-			let subCommand = interaction.options.getSubcommand();
-			if (subCommand == "manage") {
-				domain = interaction.options.getString("name");
-				require("./src/actions/domainOptions").manage(interaction, domain);
-			}
-			if (subCommand == "list") {
-				require("./src/actions/domainList").list(interaction);
-			}
-			if (subCommand == "certificates") {
-				require("./src/actions/domainList").certificates(interaction);
-			}
-		}
-		if (interaction.commandName === "webserver") {
-			let subCommand = interaction.options.getSubcommand();
-			if (subCommand == "off") {
-				require("./src/actions/serverManage").off(interaction);
-			}
-			if (subCommand == "on") {
-				require("./src/actions/serverManage").on(interaction);
-			}
-		
-		}
-	} else {
 		interaction.reply({
 			content: `Wrong channel. Correct: 👉 <#${
 				guild.channels.cache.find(
@@ -119,10 +106,57 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			}>`,
 			ephemeral: true,
 		});
+		return;
+	}
+
+	if (interaction.commandName === "domain") {
+		let subCommand = interaction.options.getSubcommand();
+		if (subCommand == "manage") {
+			domain = interaction.options.getString("name");
+			require("./src/actions/domainOptions").manage(interaction, domain);
+		}
+		if (subCommand == "list") {
+			require("./src/actions/domainList").list(interaction);
+		}
+		if (subCommand == "certificates") {
+			require("./src/actions/domainList").certificates(interaction);
+		}
+	}
+	if (interaction.commandName === "webserver") {
+		let subCommand = interaction.options.getSubcommand();
+		let subCommandGrup = interaction.options.getSubcommandGroup();
+
+		if (subCommand == "off") {
+			require("./src/actions/serverManage").off(interaction);
+		}
+		if (subCommand == "on") {
+			require("./src/actions/serverManage").on(interaction);
+		}
+		if (subCommandGrup == "users") {
+			if (subCommand == "add") {
+				require("./src/actions/serverManage").userAdd(interaction);
+			}
+			if (subCommand == "remove") {
+				require("./src/actions/serverManage").userRemove(interaction);
+			}
+			if (subCommand == "list") {
+				require("./src/actions/serverManage").usersList(interaction);
+			}
+		}
 	}
 });
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
+	nconf.file("default", configPath);
+	let users = Object.assign([], nconf.get("users"));
+
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+		interaction.reply({
+			content: `You are not authorized!`,
+			ephemeral: true,
+		});
+		return;
+	}
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 
 	if (
@@ -165,6 +199,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isStringSelectMenu()) return;
+	nconf.file("default", configPath);
+	let users = Object.assign([], nconf.get("users"));
+
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+		interaction.reply({
+			content: `You are not authorized!`,
+			ephemeral: true,
+		});
+		return;
+	}
+
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 
 	if (interaction.customId === "selectProtocol") {
@@ -224,6 +269,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isModalSubmit()) return;
+	nconf.file("default", configPath);
+	let users = Object.assign([], nconf.get("users"));
+
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+		interaction.reply({
+			content: `You are not authorized!`,
+			ephemeral: true,
+		});
+		return;
+	}
+
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 	await interaction.message.delete();
 
