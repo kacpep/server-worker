@@ -48,13 +48,9 @@ async function on(interaction) {
 	});
 }
 async function userAdd(interaction) {
-	nconf.file("default", "C:\\Users\\kacpeppp\\Desktop\\server-worker\\src\\configs\\config.json");
-
 	let users = Object.assign([], nconf.get("users"));
-	console.log(users);
-	console.log(users.indexOf(interaction.user.tag));
 
-	if (users.indexOf(interaction.user.tag) == -1) {
+	if (!users.includes(interaction.options.getUser("user").tag)) {
 		users.push(interaction.options.getUser("user").tag);
 		nconf.set("users", users);
 		nconf.save();
@@ -90,28 +86,43 @@ async function userAdd(interaction) {
 }
 async function userRemove(interaction) {
 	let users = Object.assign([], nconf.get("users"));
-	console.log(!users.includes(interaction.user.tag));
+	
+	if (!users.includes(interaction.options.getUser("user").tag)) {
+		const embed = new EmbedBuilder()
+			.setColor(0xff0000)
+			.setTitle("There is no such user")
 
-	nconf.set(
-		"users",
-		arrayRemove(users, interaction.options.getUser("user").tag)
-	);
+			.setTimestamp()
+			.setFooter({
+				text: "made by ~ kacpep.dev",
+				iconURL: "https://i.imgur.com/M0uWxCA.png",
+			});
 
-	nconf.save();
-
-	const embed = new EmbedBuilder()
-		.setColor(0x00ff00)
-		.setTitle("User removed")
-
-		.setTimestamp()
-		.setFooter({
-			text: "made by ~ kacpep.dev",
-			iconURL: "https://i.imgur.com/M0uWxCA.png",
+		await interaction.reply({
+			embeds: [embed],
 		});
+	} else {
+		nconf.set(
+			"users",
+			arrayRemove(users, interaction.options.getUser("user").tag)
+		);
 
-	await interaction.reply({
-		embeds: [embed],
-	});
+		nconf.save();
+
+		const embed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle("User removed")
+
+			.setTimestamp()
+			.setFooter({
+				text: "made by ~ kacpep.dev",
+				iconURL: "https://i.imgur.com/M0uWxCA.png",
+			});
+
+		await interaction.reply({
+			embeds: [embed],
+		});
+	}
 }
 async function usersList(interaction) {
 	let allUsers = Object.assign([], nconf.get("users"));

@@ -87,7 +87,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+	if (
+		root != interaction.user.tag &&
+		!users.includes(interaction.options.getUser("user").tag)
+	) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -149,8 +152,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
-
-	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+	if (
+		root != interaction.user.tag &&
+		!users.includes(interaction.options.getUser("user").tag)
+	) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -202,7 +207,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+	if (
+		root != interaction.user.tag &&
+		!users.includes(interaction.options.getUser("user").tag)
+	) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -272,7 +280,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
+	if (
+		root != interaction.user.tag &&
+		!users.includes(interaction.options.getUser("user").tag)
+	) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
