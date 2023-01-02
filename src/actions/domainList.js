@@ -35,7 +35,7 @@ async function list(interaction) {
 	let enabledDomain = {
 		color: 0x0099ff,
 		title: "Enabled domains",
-		description: "What is this? All enabled domains",
+		description: "All domains are enabled",
 		thumbnail: {
 			url: "https://i.imgur.com/w8hzuoa.png",
 		},
@@ -86,7 +86,7 @@ async function certificates(interaction) {
 	let certificate = {
 		color: 0x0099ff,
 		title: "All certificates",
-		description: "What is this? Certificate of all domains (SSL).",
+		description: "Certificates of all domains (SSL).",
 		thumbnail: {
 			url: "https://i.imgur.com/w8hzuoa.png",
 		},

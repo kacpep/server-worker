@@ -89,7 +89,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
-			content: `You are not authorized!`,
+			content: `You aren't authorized!`,
 			ephemeral: true,
 		});
 		return;
@@ -99,7 +99,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		nconf.get("channelName")
 	) {
 		interaction.reply({
-			content: `Wrong channel. Correct: 👉 <#${
+			content: `Wrong channel. Correct one: 👉 <#${
 				guild.channels.cache.find(
 					(c) => c.name.toLowerCase() === nconf.get("channelName")
 				).id
@@ -155,7 +155,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			}
 		} else {
 			interaction.reply({
-				content: `You are not permission!`,
+				content: `You haven't permission to do that!`,
 				ephemeral: true,
 			});
 		}
@@ -167,7 +167,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	let users = Object.assign([], nconf.get("users"));
 	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
-			content: `You are not authorized!`,
+			content: `You aren't authorized!`,
 			ephemeral: true,
 		});
 		return;
@@ -206,7 +206,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		} else {
 			let enabled = {
 				color: 0xff0000,
-				title: "canceled!",
+				title: "Canceled!",
 				footer: {
 					text: "made by ~ kacpep.dev",
 					icon_url: "https://i.imgur.com/M0uWxCA.png",
@@ -284,7 +284,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			} else {
 				await interaction.deferReply({ ephemeral: true });
 				await interaction.editReply({
-					content: `You cannot change the protocol to the same!`,
+					content: `You can't change the protocol to the same like it was!`,
 					ephemeral: true,
 				});
 			}
@@ -304,7 +304,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				await interaction.deferReply({ ephemeral: true });
 
 				await interaction.editReply({
-					content: `You cannot change the protocol to the same!`,
+					content: `You can't change the protocol to the same like it was!`,
 					ephemeral: true,
 				});
 			}
@@ -319,7 +319,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
-			content: `You are not authorized!`,
+			content: `You aren't authorized!`,
 			ephemeral: true,
 		});
 		return;
@@ -334,7 +334,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			await interaction.deferReply({ ephemeral: true });
 
 			interaction.editReply({
-				content: "Port must be a number!",
+				content: "Port have to be a number!",
 				ephemeral: true,
 			});
 			return;

@@ -19,7 +19,7 @@ async function manage(interaction, domain) {
 			.setColor(0x0099ff)
 			.setTitle("Manage this domain")
 
-			.setDescription("What do you want to do with this domain?")
+			.setDescription("What to do with this domain?")
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 
 			.addFields({

@@ -17,7 +17,7 @@ async function protocol(interaction, domain) {
 	const domainEmbed = new EmbedBuilder()
 		.setColor(0x0099ff)
 		.setTitle("?Choose?")
-		.setDescription("What internet protocol do you want to choose?")
+		.setDescription("Which protocol do you want to choose?")
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 
 		.addFields({
@@ -37,7 +37,7 @@ async function protocol(interaction, domain) {
 			.addOptions(
 				{
 					label: "HTTP",
-					description: "Standart port add (cloudflare proxy ssl)",
+					description: "Add default port (cloudflare proxy ssl)",
 					value: "80",
 				},
 				{
@@ -80,7 +80,7 @@ async function checkExists(interaction, domain) {
 	) {
 		const Embed = new EmbedBuilder()
 			.setColor(0xf50101)
-			.setTitle("!Error domain exists!")
+			.setTitle("!Error, domain already exists!")
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 			.addFields({
 				name: "Domain name:",
@@ -129,7 +129,7 @@ async function checkExists(interaction, domain) {
 async function error(interaction, domain, err) {
 	const Embed = new EmbedBuilder()
 		.setColor(0x55ff00)
-		.setTitle("!Error!")
+		.setTitle("!Error")
 		.setDescription(`Error: ${err}`)
 
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
@@ -181,8 +181,8 @@ async function addHTTP(interaction, domain) {
 	} catch {}
 	const Embed = new EmbedBuilder()
 		.setColor(0x00ff00)
-		.setTitle("!Success!")
-		.setDescription(`Domain is deployed!`)
+		.setTitle("!Success")
+		.setDescription(`Domain deployed successfully!`)
 		.setURL(`http://${domain}`)
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({
@@ -266,8 +266,8 @@ async function addHTTPS(interaction, domain) {
 
 	const Embed = new EmbedBuilder()
 		.setColor(0x00ff00)
-		.setTitle("!Success!")
-		.setDescription(`Domain is deployed!`)
+		.setTitle("!Success")
+		.setDescription(`Domain deployed successfully!`)
 		.setURL(`http://${domain}`)
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({

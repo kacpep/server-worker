@@ -74,7 +74,7 @@ async function userAdd(interaction) {
 	} else {
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle("User already added")
+			.setTitle("User already exists")
 
 			.setTimestamp()
 			.setFooter({
@@ -94,8 +94,7 @@ async function userRemove(interaction) {
 	if (!users.includes(interaction.options.getUser("user").tag)) {
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle("There is no such user")
-
+			.setTitle("There is no such a user")
 			.setTimestamp()
 			.setFooter({
 				text: "made by ~ kacpep.dev",
@@ -116,7 +115,7 @@ async function userRemove(interaction) {
 
 		const embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle("User removed")
+			.setTitle("User has been removed")
 
 			.setTimestamp()
 			.setFooter({
@@ -166,8 +165,8 @@ async function usersList(interaction) {
 	});
 	let enabled = {
 		color: 0x0099ff,
-		title: "Enabled domains",
-		description: "What is this? All enabled domains",
+		title: "List of users",
+		description: "This is a list of all users",
 		thumbnail: {
 			url: "https://i.imgur.com/w8hzuoa.png",
 		},
@@ -190,7 +189,7 @@ async function hide(interaction) {
 	nconf.save();
 	let enabled = {
 		color: 0x00ff00,
-		title: "Hidden messages.",
+		title: "Messages will be hidden.",
 
 		footer: {
 			text: "made by ~ kacpep.dev",

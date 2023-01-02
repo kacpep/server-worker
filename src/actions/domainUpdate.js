@@ -29,7 +29,7 @@ async function countLines(input) {
 async function updateManage(interaction, domain) {
 	const Embed = new EmbedBuilder()
 		.setColor(0x0099ff)
-		.setTitle("?What do you want to update?")
+		.setTitle("What do you want to update?")
 		.setDescription("Select what you want to update on this domain")
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({
@@ -74,7 +74,7 @@ async function updateManage(interaction, domain) {
 }
 async function selectChangeProtocol(interaction, domain) {
 	let currentProtocol = "HTTPS";
-	let descriptionHTTP = "Standart port add (cloudflare proxy ssl)";
+	let descriptionHTTP = "Add default port (cloudflare proxy ssl)";
 	let descriptionHTTPS = "SSL certificate ~ certbot python";
 	if (
 		(await countLines(
@@ -89,7 +89,7 @@ async function selectChangeProtocol(interaction, domain) {
 	const domainEmbed = new EmbedBuilder()
 		.setColor(0x0099ff)
 		.setTitle("?Choose?")
-		.setDescription("What internet protocol do you want to choose?")
+		.setDescription("Which protocol do you want to choose?")
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 
 		.addFields({
@@ -173,8 +173,8 @@ async function changeToHTTP(interaction, domain) {
 	} catch {}
 	const Embed = new EmbedBuilder()
 		.setColor(0x00ff00)
-		.setTitle("!Success!")
-		.setDescription(`Domain is updated!`)
+		.setTitle("!Success")
+		.setDescription(`Domain have been updated!`)
 		.setURL(`http://${domain}`)
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({
@@ -253,8 +253,8 @@ async function changeToHTTPS(interaction, domain) {
 	} catch {}
 	const Embed = new EmbedBuilder()
 		.setColor(0x00ff00)
-		.setTitle("!Success!")
-		.setDescription(`Domain is updated!`)
+		.setTitle("!Success")
+		.setDescription(`Domain have been updated!`)
 		.setURL(`http://${domain}`)
 		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 		.addFields({
@@ -286,12 +286,12 @@ async function changeToHTTPS(interaction, domain) {
 async function selectPortForwarding(interaction, domain) {
 	const modal = new ModalBuilder()
 		.setCustomId("modalPortForwarding")
-		.setTitle("Set forwarding prot")
+		.setTitle("Set forwarding port")
 		.addComponents(
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
 					.setCustomId("newPort")
-					.setLabel("What port do you want to redirect to?")
+					.setLabel("Which port do you want to redirect to?")
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(7)
@@ -330,7 +330,7 @@ async function portForwarding(interaction, domain) {
 			});
 			const Embed = new EmbedBuilder()
 				.setColor(0x00ff00)
-				.setTitle("!Success!")
+				.setTitle("!Success")
 				.setDescription(`Port forwarding done!`)
 				.setURL(`http://${domain}`)
 				.setThumbnail("https://i.imgur.com/w8hzuoa.png")
@@ -394,7 +394,7 @@ async function portForwarding(interaction, domain) {
 		});
 		const Embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle("!Success!")
+			.setTitle("!Success")
 			.setDescription(`Port forwarding done!`)
 			.setURL(`http://${domain}`)
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
