@@ -13,7 +13,7 @@ module.exports = {
 		.addSubcommandGroup((option) =>
 			option
 				.setName("users")
-				.setDescription("Manage users in webserver.")
+				.setDescription("Manage users on webserver.")
 				.addSubcommand((option) =>
 					option
 						.setName("add")
@@ -25,7 +25,7 @@ module.exports = {
 				.addSubcommand((option) =>
 					option
 						.setName("remove")
-						.setDescription("Remove user to the webserver.")
+						.setDescription("Remove user from the webserver.")
 						.addUserOption((option) =>
 							option.setName("user").setDescription("Select user")
 						)
@@ -37,7 +37,7 @@ module.exports = {
 		.addSubcommandGroup((option) =>
 			option
 				.setName("message-visibility")
-				.setDescription("Messages visible to everyone or for user.")
+				.setDescription("Visibility of messages to everyone or only for one user.")
 				.addSubcommand((option) =>
 					option.setName("hiden").setDescription("Hide messages.")
 				)
