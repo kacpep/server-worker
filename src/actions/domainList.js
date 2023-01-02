@@ -1,4 +1,5 @@
 const fs = require("node:fs");
+const nconf = require("nconf");
 
 async function list(interaction) {
 	let allEnabledDomain = fs
@@ -48,6 +49,7 @@ async function list(interaction) {
 		content: "",
 		embeds: [enabledDomain],
 		components: [],
+		ephemeral: nconf.get("messageVisibility"),
 	});
 }
 async function certificates(interaction) {
@@ -98,6 +100,7 @@ async function certificates(interaction) {
 		content: "",
 		embeds: [certificate],
 		components: [],
+		ephemeral: nconf.get("messageVisibility"),
 	});
 }
 

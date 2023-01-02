@@ -27,14 +27,24 @@ and then add domains with bot.
   npm i
 ```
 
-#### Edit .env ⚒️
+#### Create .env ⚒️
 
 ```env
 DISCORD_TOKEN=
 GUILD_ID=
 CLIENT_ID=
-CHANNEL_NAME=server-worker
-CATEGORY_NAME=WEB DEV
+```
+
+#### edit src/configs/config.json ⚒️
+
+```json
+{
+	"channelName": "server-worker",
+	"categoryName": "WEB DEV",
+	"users": [],
+	"root": "owner name",
+	"messageVisibility": false
+}
 ```
 
 #### Start the server 😜
@@ -59,6 +69,11 @@ Tested on `Debian GNU/Linux 9.13 `
 
 `v1.0.0` ~ important commands ❗
 
+
+`v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
+
+
 ## Authors 👷‍♂️
+
 
 - [@kacpep](https://www.github.com/kacpep) 😇

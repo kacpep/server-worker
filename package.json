@@ -1,6 +1,6 @@
 {
 	"name": "server-worker",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -17,13 +17,14 @@
 		"nginx"
 	],
 	"author": "kacpep",
-	"license": "MIT",
+	"license": "LICENSE",
 	"bugs": {
 		"url": "https://github.com/kacpep/server-worker/issues"
 	},
 	"homepage": "https://github.com/kacpep/server-worker#readme",
 	"dependencies": {
 		"discord.js": "^14.7.1",
-		"dotenv": "^16.0.3"
+		"dotenv": "^16.0.3",
+		"nconf": "^0.12.0"
 	}
 }
