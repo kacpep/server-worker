@@ -1,10 +1,9 @@
 # Server Worker ⚙️
 
-Bot on discord for web server management. 
-Server support by discord bot. Perfect bot for
-beginner web developers, just buy a vps server
-with linux nodejs, npm, nginx, certbot installation
-and download and run the bot. Change data in .env 
+Invite the bot to the server and have fun!🎟️
+Bot on discord for web server management services. Perfect bot for
+web development beginners, just buy a vps server
+based on linux than install `nodejs`, `npm`, `nginx` and `certbot`. After this download and run the bot. You should change data in .env 
 and then add domains with bot.
 
 ## Run Locally ⌚
@@ -27,24 +26,14 @@ and then add domains with bot.
   npm i
 ```
 
-#### Create .env ⚒️
+#### Edit .env ⚒️
 
 ```env
 DISCORD_TOKEN=
 GUILD_ID=
 CLIENT_ID=
-```
-
-#### edit src/configs/config.json ⚒️
-
-```json
-{
-	"channelName": "server-worker",
-	"categoryName": "WEB DEV",
-	"users": [],
-	"root": "owner name",
-	"messageVisibility": false
-}
+CHANNEL_NAME=server-worker
+CATEGORY_NAME=WEB DEV
 ```
 
 #### Start the server 😜
@@ -53,27 +42,21 @@ CLIENT_ID=
   npm start
 ```
 
-### Invite the bot to the server ~ ready! Have fun!🎟️
-
 ### System requirements 💽
 
-Operating system `linux`
+Operating system: `linux`
 
-You must have installed `nodejs | npm | sudo | nginx | certbot | python3-certbot-nginx | `
+You have to install: `nodejs` | `npm` | `sudo` | `nginx` | `certbot` | `python3-certbot-nginx` |
 
 ### Tested 🐧
 
-Tested on `Debian GNU/Linux 9.13 `
+Tested on: `Debian GNU/Linux 9.13 `
 
 ### Versions 🆕
 
 `v1.0.0` ~ important commands ❗
 
-
-`v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
-
-
 ## Authors 👷‍♂️
 
-
 - [@kacpep](https://www.github.com/kacpep) 😇
+- [@Wain](https://github.com/Wain777)
