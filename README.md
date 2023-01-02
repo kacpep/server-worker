@@ -27,14 +27,24 @@ and then add domains with bot.
   npm i
 ```
 
-#### Edit .env ⚒️
+#### Create .env ⚒️
 
 ```env
 DISCORD_TOKEN=
 GUILD_ID=
 CLIENT_ID=
-CHANNEL_NAME=server-worker
-CATEGORY_NAME=WEB DEV
+```
+
+#### edit src/configs/config.json ⚒️
+
+```json
+{
+	"channelName": "server-worker",
+	"categoryName": "WEB DEV",
+	"users": [],
+	"root": "owner name",
+	"messageVisibility": false
+}
 ```
 
 #### Start the server 😜

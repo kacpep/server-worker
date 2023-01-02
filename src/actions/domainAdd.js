@@ -54,7 +54,7 @@ async function protocol(interaction, domain) {
 			ephemeral: nconf.get("messageVisibility"),
 		});
 	} else {
-		await interaction.udpate({
+		await interaction.update({
 			content: "",
 			embeds: [domainEmbed],
 			components: [selectMenu],
@@ -203,7 +203,7 @@ async function addHTTP(interaction, domain) {
 			ephemeral: nconf.get("messageVisibility"),
 		});
 	} else {
-		await interaction.udpate({
+		await interaction.update({
 			content: "",
 			embeds: [Embed],
 			components: [],
