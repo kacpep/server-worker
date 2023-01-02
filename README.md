@@ -73,6 +73,10 @@ Tested on `Debian GNU/Linux 9.13 `
 `v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
 
 
+### Do you need help? Go on this discord:
+
+[![Discord](https://img.shields.io/badge/discord-7289da?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/SR59VHwbbm)
+
 ## Authors 👷‍♂️
 
 
