@@ -2,5 +2,6 @@
 	"channelName": "server-worker",
 	"categoryName": "WEB DEV",
 	"users": [],
-	"root": ""
+	"root": "",
+	"messageVisibility": false
 }
