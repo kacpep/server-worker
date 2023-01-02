@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const path = require("node:path");
 const fs = require("node:fs");
+const nconf = require("nconf");
 
 
 async function manage(interaction, domain) {
@@ -68,6 +69,7 @@ async function manage(interaction, domain) {
 		await interaction.reply({
 			embeds: [domainEmbed],
 			components: [btns],
+			ephemeral: nconf.get("messageVisibility"),
 		});
 	} else {
 		await interaction.reply({

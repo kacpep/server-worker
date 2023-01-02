@@ -7,10 +7,13 @@ const {
 	ButtonStyle,
 } = require("discord.js");
 const { execSync } = require("child_process");
+const nconf = require("nconf");
 
 async function remove(interaction, domain) {
-	await interaction.message.delete();
-	await interaction.deferReply();
+	if (!nconf.get("messageVisibility")) {
+		await interaction.message.delete();
+		await interaction.deferReply({ ephemeral: nconf.get("messageVisibility") });
+	}
 
 	const filePath = path.join("/var/www", domain);
 	const availablPath = path.join("/etc/nginx/sites-available", domain);
@@ -57,11 +60,20 @@ async function remove(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
-
-		await interaction.editReply({
-			embeds: [Embed],
-			components: [],
-		});
+		if (!nconf.get("messageVisibility")) {
+			await interaction.editReply({
+				embeds: [Embed],
+				components: [],
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		} else {
+			await interaction.update({
+				content: "",
+				embeds: [Embed],
+				components: [],
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		}
 	} else {
 		const Embed = new EmbedBuilder()
 			.setColor(0xff0000)
@@ -93,10 +105,20 @@ async function remove(interaction, domain) {
 					.setEmoji("⚙️")
 					.setStyle(ButtonStyle.Secondary)
 			);
-		await interaction.editReply({
-			embeds: [Embed],
-			components: [btns],
-		});
+		if (!nconf.get("messageVisibility")) {
+			await interaction.editReply({
+				embeds: [Embed],
+				components: [btns],
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		} else {
+			await interaction.update({
+				content: "",
+				embeds: [Embed],
+				components: [btns],
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		}
 	}
 }
 async function definitely(interaction, domain) {
@@ -125,14 +147,24 @@ async function definitely(interaction, domain) {
 		)
 		.addComponents(
 			new ButtonBuilder()
-				.setCustomId("cancelremove")
+				.setCustomId("cancel")
 				.setEmoji("⛔")
 				.setLabel("cancel")
 				.setStyle(ButtonStyle.Danger)
 		);
-	await interaction.editReply({
-		embeds: [Embed],
-		components: [btns],
-	});
+	if (!nconf.get("messageVisibility")) {
+		await interaction.editReply({
+			embeds: [Embed],
+			components: [btns],
+			ephemeral: nconf.get("messageVisibility"),
+		});
+	} else {
+		await interaction.update({
+			content: "",
+			embeds: [Embed],
+			components: [btns],
+			ephemeral: nconf.get("messageVisibility"),
+		});
+	}
 }
 module.exports = { remove, definitely };

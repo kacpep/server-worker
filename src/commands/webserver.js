@@ -33,5 +33,16 @@ module.exports = {
 				.addSubcommand((option) =>
 					option.setName("list").setDescription("List of users webserver.")
 				)
+		)
+		.addSubcommandGroup((option) =>
+			option
+				.setName("message-visibility")
+				.setDescription("Messages visible to everyone or for user.")
+				.addSubcommand((option) =>
+					option.setName("hiden").setDescription("Hide messages.")
+				)
+				.addSubcommand((option) =>
+					option.setName("visible").setDescription("Show messages.")
+				)
 		),
 };

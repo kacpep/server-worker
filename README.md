@@ -59,6 +59,7 @@ Tested on `Debian GNU/Linux 9.13 `
 
 `v1.0.0` ~ important commands
 
+`v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
 ## Authors
 
 - [@kacpep](https://www.github.com/kacpep) 😇

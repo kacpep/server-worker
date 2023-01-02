@@ -25,6 +25,7 @@ async function off(interaction) {
 
 	await interaction.reply({
 		embeds: [embed],
+		ephemeral: nconf.get("messageVisibility"),
 	});
 }
 async function on(interaction) {
@@ -45,6 +46,7 @@ async function on(interaction) {
 
 	await interaction.reply({
 		embeds: [embed],
+		ephemeral: nconf.get("messageVisibility"),
 	});
 }
 async function userAdd(interaction) {
@@ -67,6 +69,7 @@ async function userAdd(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
+			ephemeral: nconf.get("messageVisibility"),
 		});
 	} else {
 		const embed = new EmbedBuilder()
@@ -81,12 +84,13 @@ async function userAdd(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
+			ephemeral: nconf.get("messageVisibility"),
 		});
 	}
 }
 async function userRemove(interaction) {
 	let users = Object.assign([], nconf.get("users"));
-	
+
 	if (!users.includes(interaction.options.getUser("user").tag)) {
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
@@ -100,6 +104,7 @@ async function userRemove(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
+			ephemeral: nconf.get("messageVisibility"),
 		});
 	} else {
 		nconf.set(
@@ -121,6 +126,7 @@ async function userRemove(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
+			ephemeral: nconf.get("messageVisibility"),
 		});
 	}
 }
@@ -175,7 +181,48 @@ async function usersList(interaction) {
 		content: "",
 		embeds: [enabled],
 		components: [],
+		ephemeral: nconf.get("messageVisibility"),
+	});
+}
+async function hide(interaction) {
+	nconf.set("messageVisibility", true);
+
+	nconf.save();
+	let enabled = {
+		color: 0x00ff00,
+		title: "Hidden messages.",
+
+		footer: {
+			text: "made by ~ kacpep.dev",
+			icon_url: "https://i.imgur.com/M0uWxCA.png",
+		},
+	};
+	await interaction.reply({
+		content: "",
+		embeds: [enabled],
+		components: [],
+		ephemeral: true,
+	});
+}
+async function show(interaction) {
+	nconf.set("messageVisibility", false);
+
+	nconf.save();
+	let enabled = {
+		color: 0x00ff00,
+		title: "Messages will be visible.",
+
+		footer: {
+			text: "made by ~ kacpep.dev",
+			icon_url: "https://i.imgur.com/M0uWxCA.png",
+		},
+	};
+	await interaction.reply({
+		content: "",
+		embeds: [enabled],
+		components: [],
+		ephemeral: true,
 	});
 }
 
-module.exports = { off, on, userAdd, userRemove, usersList };
+module.exports = { off, on, userAdd, userRemove, usersList, hide, show };

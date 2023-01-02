@@ -87,10 +87,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (
-		root != interaction.user.tag &&
-		!users.includes(interaction.options.getUser("user").tag)
-	) {
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -135,16 +132,32 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		if (subCommand == "on") {
 			require("./src/actions/serverManage").on(interaction);
 		}
-		if (subCommandGrup == "users") {
-			if (subCommand == "add") {
-				require("./src/actions/serverManage").userAdd(interaction);
+
+		if (interaction.user.tag == root) {
+			if (subCommandGrup == "message-visibility") {
+				if (subCommand == "hiden") {
+					require("./src/actions/serverManage").hide(interaction);
+				}
+				if (subCommand == "visible") {
+					require("./src/actions/serverManage").show(interaction);
+				}
 			}
-			if (subCommand == "remove") {
-				require("./src/actions/serverManage").userRemove(interaction);
+			if (subCommandGrup == "users") {
+				if (subCommand == "add") {
+					require("./src/actions/serverManage").userAdd(interaction);
+				}
+				if (subCommand == "remove") {
+					require("./src/actions/serverManage").userRemove(interaction);
+				}
+				if (subCommand == "list") {
+					require("./src/actions/serverManage").usersList(interaction);
+				}
 			}
-			if (subCommand == "list") {
-				require("./src/actions/serverManage").usersList(interaction);
-			}
+		} else {
+			interaction.reply({
+				content: `You are not permission!`,
+				ephemeral: true,
+			});
 		}
 	}
 });
@@ -152,10 +165,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isButton()) return;
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
-	if (
-		root != interaction.user.tag &&
-		!users.includes(interaction.options.getUser("user").tag)
-	) {
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -170,8 +180,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		interaction.customId === "update" ||
 		interaction.customId === "changeProtocol"
 	) {
-		await interaction.message.delete();
-		await interaction.deferReply();
+		if (!nconf.get("messageVisibility")) {
+			await interaction.message.delete();
+
+			await interaction.deferReply({
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		}
 	}
 	if (interaction.customId === "add") {
 		require("./src/actions/domainAdd").protocol(interaction, domain);
@@ -186,7 +201,24 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		require("./src/actions/domainRemove").remove(interaction, domain);
 	}
 	if (interaction.customId === "cancel") {
-		await interaction.message.delete();
+		if (!nconf.get("messageVisibility")) {
+			await interaction.message.delete();
+		} else {
+			let enabled = {
+				color: 0xff0000,
+				title: "canceled!",
+				footer: {
+					text: "made by ~ kacpep.dev",
+					icon_url: "https://i.imgur.com/M0uWxCA.png",
+				},
+			};
+			await interaction.update({
+				content: "",
+				embeds: [enabled],
+				components: [],
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		}
 	}
 	if (interaction.customId === "changeProtocol") {
 		require("./src/actions/domainUpdate").selectChangeProtocol(
@@ -207,10 +239,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (
-		root != interaction.user.tag &&
-		!users.includes(interaction.options.getUser("user").tag)
-	) {
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -221,9 +250,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 
 	if (interaction.customId === "selectProtocol") {
-		await interaction.message.delete();
-
-		await interaction.deferReply();
+		if (!nconf.get("messageVisibility")) {
+			await interaction.message.delete();
+			await interaction.deferReply({
+				ephemeral: nconf.get("messageVisibility"),
+			});
+		}
 
 		if (interaction.values == 443) {
 			require("./src/actions/domainAdd").addHTTPS(interaction, domain);
@@ -232,7 +264,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 	if (interaction.customId === "selectChangeProtocol") {
-		await interaction.message.delete();
+		if (!nconf.get("messageVisibility")) await interaction.message.delete();
 
 		if (interaction.values == 443) {
 			if (
@@ -240,7 +272,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
 				)) <= 10
 			) {
-				await interaction.deferReply({ ephemeral: false });
+				if (!nconf.get("messageVisibility"))
+					await interaction.deferReply({
+						ephemeral: nconf.get("messageVisibility"),
+					});
 
 				require("./src/actions/domainUpdate").changeToHTTPS(
 					interaction,
@@ -248,7 +283,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				);
 			} else {
 				await interaction.deferReply({ ephemeral: true });
-
 				await interaction.editReply({
 					content: `You cannot change the protocol to the same!`,
 					ephemeral: true,
@@ -260,7 +294,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
 				)) <= 10
 			) {
-				await interaction.deferReply({ ephemeral: false });
+				if (!nconf.get("messageVisibility"))
+					await interaction.deferReply({
+						ephemeral: nconf.get("messageVisibility"),
+					});
 
 				require("./src/actions/domainUpdate").changeToHTTP(interaction, domain);
 			} else {
@@ -280,10 +317,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
 
-	if (
-		root != interaction.user.tag &&
-		!users.includes(interaction.options.getUser("user").tag)
-	) {
+	if (root != interaction.user.tag && !users.includes(interaction.user.tag)) {
 		interaction.reply({
 			content: `You are not authorized!`,
 			ephemeral: true,
@@ -292,7 +326,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 
 	let domain = interaction.message.embeds[0].data.fields[0].value;
-	await interaction.message.delete();
+	if (!nconf.get("messageVisibility")) await interaction.message.delete();
 
 	if (interaction.customId === "modalPortForwarding") {
 		let port = interaction.fields.getTextInputValue("newPort");
