@@ -26,14 +26,24 @@ and then add domains with bot.
   npm i
 ```
 
-#### Edit .env ⚒️
+#### Create .env ⚒️
 
 ```env
 DISCORD_TOKEN=
 GUILD_ID=
 CLIENT_ID=
-CHANNEL_NAME=server-worker
-CATEGORY_NAME=WEB DEV
+```
+
+#### Edit src/configs/config.json ⚒️
+
+```json
+{
+	"channelName": "server-worker",
+	"categoryName": "WEB DEV",
+	"users": [],
+	"root": "owner name",
+	"messageVisibility": false
+}
 ```
 
 #### Start the server 😜
@@ -55,6 +65,14 @@ Tested on: `Debian GNU/Linux 9.13 `
 ### Versions 🆕
 
 `v1.0.0` ~ important commands ❗
+
+`v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
+
+`v1.1.1` ~ translated to english by [@Wain](https://github.com/Wain777)
+
+### Do you need help? Go on this discord:
+
+[![Discord](https://img.shields.io/badge/discord-7289da?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/SR59VHwbbm)
 
 ## Authors 👷‍♂️
 
