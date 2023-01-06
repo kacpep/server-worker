@@ -14,6 +14,10 @@ const {
 	GatewayIntentBits,
 	ChannelType,
 	ActivityType,
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 } = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
@@ -343,12 +347,36 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 });
+function sendErrorMessage(e) {
+	let channel = client.channels.cache.get(
+		guild.channels.cache.find(
+			(c) => c.name.toLowerCase() === nconf.get("channelName")
+		).id
+	);
+
+	const Embed = new EmbedBuilder()
+		.setColor(0xff0000)
+		.setTitle("!Error")
+		.setDescription(`${e}`)
+		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+		.setTimestamp()
+		.setFooter({
+			text: "made by ~ kacpep.dev",
+			iconURL: "https://i.imgur.com/M0uWxCA.png",
+		});
+	const btn = new ActionRowBuilder().addComponents(
+		new ButtonBuilder()
+			.setLabel("Report a bug")
+			.setEmoji("📨")
+			.setURL("https://github.com/kacpep/server-worker/issues/new/choose")
+			.setStyle(ButtonStyle.Link)
+	);
+	channel.send({ embeds: [Embed], components: [btn] });
+}
 
 client.login(process.env.DISCORD_TOKEN);
 
 process.on("uncaughtException", (error) => {
-	console.log("-----handler-------");
 	console.log(error);
-	console.log("-----handler-------");
-	process.exit(1);
+	sendErrorMessage(error);
 });
