@@ -14,10 +14,15 @@ const {
 	GatewayIntentBits,
 	ChannelType,
 	ActivityType,
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 } = require("discord.js");
 require("dotenv").config();
 const wait = require("node:timers/promises").setTimeout;
 const readline = require("node:readline");
+const axios = require("axios").default;
 async function countLines(input) {
 	let lineCount = 0;
 
@@ -43,12 +48,77 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+function versionCompare(myVersion, minimumVersion) {
+	if (myVersion == minimumVersion) return false;
+
+	var v1 = myVersion.split("."),
+		v2 = minimumVersion.split("."),
+		minLength;
+
+	minLength = Math.min(v1.length, v2.length);
+
+	for (i = 0; i < minLength; i++) {
+		if (Number(v1[i]) > Number(v2[i])) {
+			return true;
+		}
+		if (Number(v1[i]) < Number(v2[i])) {
+			return false;
+		}
+	}
+
+	return v1.length >= v2.length;
+}
+
 client.once(Events.ClientReady, async () => {
 	console.log("Ready!");
+	guild = client.guilds.cache.get(process.env.GUILD_ID);
 
+	let latestReleases = await axios.get(
+		"https://github.com/kacpep/server-worker/releases/latest",
+		{
+			headers: {
+				Accept: "application/json",
+			},
+		}
+	);
+
+	if (
+		versionCompare(
+			process.env.npm_package_version,
+			latestReleases.data.tag_name.slice(1)
+		)
+	) {
+		console.log(
+			"New version available! Update now! https://github.com/kacpep/server-worker"
+		);
+		try {
+			let channel = client.channels.cache.get(
+				guild.channels.cache.find(
+					(c) => c.name.toLowerCase() === nconf.get("channelName")
+				).id
+			);
+			const Embed = new EmbedBuilder()
+				.setColor(0x00ff00)
+				.setTitle("!Update")
+				.setDescription(`New version available!`)
+				.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+				.setTimestamp()
+				.setFooter({
+					text: "made by ~ kacpep.dev",
+					iconURL: "https://i.imgur.com/M0uWxCA.png",
+				});
+			const btn = new ActionRowBuilder().addComponents(
+				new ButtonBuilder()
+					.setLabel("Update now!")
+					.setEmoji("🆕")
+					.setURL("https://github.com/kacpep/server-worker")
+					.setStyle(ButtonStyle.Link)
+			);
+			channel.send({ embeds: [Embed], components: [btn] });
+		} catch {}
+	}
 	client.user.setActivity("better side..", { type: ActivityType.Watching });
 
-	guild = client.guilds.cache.get(process.env.GUILD_ID);
 	if (
 		!guild.channels.cache.find(
 			(channel) =>
@@ -83,6 +153,27 @@ client.once(Events.ClientReady, async () => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+	let latestReleases = await axios.get(
+		"https://github.com/kacpep/server-worker/releases/latest",
+		{
+			headers: {
+				Accept: "application/json",
+			},
+		}
+	);
+	if (
+		versionCompare(
+			process.env.npm_package_version,
+			latestReleases.data.tag_name.slice(1)
+		)
+	) {
+		console.log(
+			"New version available! Update now! https://github.com/kacpep/server-worker"
+		);
+		client.user.setActivity("New version available", {
+			type: ActivityType.Watching,
+		});
+	}
 	if (!interaction.isChatInputCommand()) return;
 	nconf.file("default", configPath);
 	let users = Object.assign([], nconf.get("users"));
@@ -343,12 +434,38 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 });
+function sendErrorMessage(e) {
+	try {
+		let channel = client.channels.cache.get(
+			guild.channels.cache.find(
+				(c) => c.name.toLowerCase() === nconf.get("channelName")
+			).id
+		);
+
+		const Embed = new EmbedBuilder()
+			.setColor(0xff0000)
+			.setTitle("!Error")
+			.setDescription(`${e}`)
+			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+			.setTimestamp()
+			.setFooter({
+				text: "made by ~ kacpep.dev",
+				iconURL: "https://i.imgur.com/M0uWxCA.png",
+			});
+		const btn = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setLabel("Report a bug")
+				.setEmoji("📨")
+				.setURL("https://github.com/kacpep/server-worker/issues/new/choose")
+				.setStyle(ButtonStyle.Link)
+		);
+		channel.send({ embeds: [Embed], components: [btn] });
+	} catch {}
+}
 
 client.login(process.env.DISCORD_TOKEN);
 
 process.on("uncaughtException", (error) => {
-	console.log("-----handler-------");
 	console.log(error);
-	console.log("-----handler-------");
-	process.exit(1);
+	sendErrorMessage(error);
 });

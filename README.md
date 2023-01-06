@@ -62,13 +62,6 @@ You have to install: `nodejs` | `npm` | `sudo` | `nginx` | `certbot` | `python3-
 
 Tested on: `Debian GNU/Linux 9.13 `
 
-### Versions 🆕
-
-`v1.0.0` ~ important commands ❗
-
-`v1.1.0` ~ added: adding a user and disabling/enabling the server and message visibility
-
-`v1.1.1` ~ translated to english by [@Wain](https://github.com/Wain777)
 
 ### Do you need help? Go on this discord:
 
