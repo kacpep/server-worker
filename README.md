@@ -41,8 +41,7 @@ CLIENT_ID=
 	"channelName": "server-worker",
 	"categoryName": "WEB DEV",
 	"users": [],
-	"root": "owner name",
-	"messageVisibility": false
+	"root": "owner name"
 }
 ```
 
