@@ -8,7 +8,6 @@ const path = require("node:path");
 const fs = require("node:fs");
 const nconf = require("nconf");
 
-
 async function manage(interaction, domain) {
 	if (
 		/([a-z0-9A-Z]\.)*[a-z0-9-]+\.([a-z0-9]{2,24})+(\.co\.([a-z0-9]{2,24})|\.([a-z0-9]{2,24}))*/g.test(
@@ -32,21 +31,13 @@ async function manage(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
-		const btns = new ActionRowBuilder()
-			.addComponents(
-				new ButtonBuilder()
-					.setCustomId("add")
-					.setEmoji("🔨")
-					.setLabel("add")
-					.setStyle(ButtonStyle.Success)
-			)
-			.addComponents(
-				new ButtonBuilder()
-					.setCustomId("remove")
-					.setLabel("remove")
-					.setEmoji("💥")
-					.setStyle(ButtonStyle.Danger)
-			);
+		const btns = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setCustomId("add")
+				.setEmoji("🔨")
+				.setLabel("add")
+				.setStyle(ButtonStyle.Success)
+		);
 
 		const filePath = path.join("/var/www", domain);
 		const availablPath = path.join("/etc/nginx/sites-available", domain);
@@ -59,6 +50,13 @@ async function manage(interaction, domain) {
 		) {
 			btns.addComponents(
 				new ButtonBuilder()
+					.setCustomId("remove")
+					.setLabel("remove")
+					.setEmoji("💥")
+					.setStyle(ButtonStyle.Danger)
+			);
+			btns.addComponents(
+				new ButtonBuilder()
 					.setCustomId("update")
 					.setLabel("update")
 					.setEmoji("⚙️")
@@ -69,7 +67,7 @@ async function manage(interaction, domain) {
 		await interaction.reply({
 			embeds: [domainEmbed],
 			components: [btns],
-			ephemeral: nconf.get("messageVisibility"),
+			ephemeral: true,
 		});
 	} else {
 		await interaction.reply({

@@ -49,7 +49,7 @@ async function list(interaction) {
 		content: "",
 		embeds: [enabledDomain],
 		components: [],
-		ephemeral: nconf.get("messageVisibility"),
+		ephemeral: true,
 	});
 }
 async function certificates(interaction) {
@@ -100,7 +100,7 @@ async function certificates(interaction) {
 		content: "",
 		embeds: [certificate],
 		components: [],
-		ephemeral: nconf.get("messageVisibility"),
+		ephemeral: true,
 	});
 }
 

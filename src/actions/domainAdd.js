@@ -47,20 +47,13 @@ async function protocol(interaction, domain) {
 				}
 			)
 	);
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			embeds: [domainEmbed],
-			components: [selectMenu],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [domainEmbed],
-			components: [selectMenu],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.update({
+		content: "",
+		embeds: [domainEmbed],
+		components: [selectMenu],
+		ephemeral: true,
+	});
 }
 async function checkExists(interaction, domain) {
 	let htmlFolder = __dirname + "/var/www";
@@ -107,20 +100,14 @@ async function checkExists(interaction, domain) {
 					.setEmoji("⚙️")
 					.setStyle(ButtonStyle.Secondary)
 			);
-		if (!nconf.get("messageVisibility")) {
-			await interaction.editReply({
-				embeds: [Embed],
-				components: [btns],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		} else {
-			await interaction.update({
-				content: "",
-				embeds: [Embed],
-				components: [btns],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+
+		await interaction.update({
+			content: "",
+			embeds: [Embed],
+			components: [btns],
+			ephemeral: true,
+		});
+
 		return false;
 	} else {
 		return true;
@@ -147,7 +134,7 @@ async function error(interaction, domain, err) {
 	await interaction.update({
 		embeds: [Embed],
 		components: [],
-		ephemeral: nconf.get("messageVisibility"),
+		ephemeral: true,
 	});
 	return true;
 }
@@ -195,21 +182,13 @@ async function addHTTP(interaction, domain) {
 			text: "made by ~ kacpep.dev",
 			iconURL: "https://i.imgur.com/M0uWxCA.png",
 		});
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.editReply({
+		content: "",
+		embeds: [Embed],
+		components: [],
+		ephemeral: true,
+	});
 }
 async function addHTTPS(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
@@ -280,21 +259,13 @@ async function addHTTPS(interaction, domain) {
 			text: "made by ~ kacpep.dev",
 			iconURL: "https://i.imgur.com/M0uWxCA.png",
 		});
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.editReply({
+		content: "",
+		embeds: [Embed],
+		components: [],
+		ephemeral: true,
+	});
 }
 
 module.exports = { protocol, checkExists, addHTTP, addHTTPS };

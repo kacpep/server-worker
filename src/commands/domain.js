@@ -9,7 +9,7 @@ module.exports = {
 				.setName("manage")
 				.setDescription("management")
 				.addStringOption((option) =>
-					option.setName("name").setDescription("Enter the domain name")
+					option.setName("name").setDescription("Enter the domain name").setRequired(true)
 				)
 		)
 		.addSubcommand((option) =>

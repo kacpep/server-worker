@@ -25,7 +25,7 @@ async function off(interaction) {
 
 	await interaction.reply({
 		embeds: [embed],
-		ephemeral: nconf.get("messageVisibility"),
+		ephemeral: true,
 	});
 }
 async function on(interaction) {
@@ -46,7 +46,28 @@ async function on(interaction) {
 
 	await interaction.reply({
 		embeds: [embed],
-		ephemeral: nconf.get("messageVisibility"),
+		ephemeral: true,
+	});
+}
+async function restart(interaction) {
+	execSync("sudo systemctl restart nginx");
+
+	const embed = new EmbedBuilder()
+		.setColor(0x00ff00)
+		.setTitle("Server restarted")
+
+		.setDescription("Nginx restarted")
+		.setThumbnail("https://i.imgur.com/w8hzuoa.png")
+
+		.setTimestamp()
+		.setFooter({
+			text: "made by ~ kacpep.dev",
+			iconURL: "https://i.imgur.com/M0uWxCA.png",
+		});
+
+	await interaction.reply({
+		embeds: [embed],
+		ephemeral: true,
 	});
 }
 async function userAdd(interaction) {
@@ -69,7 +90,7 @@ async function userAdd(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
-			ephemeral: nconf.get("messageVisibility"),
+			ephemeral: true,
 		});
 	} else {
 		const embed = new EmbedBuilder()
@@ -84,7 +105,7 @@ async function userAdd(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
-			ephemeral: nconf.get("messageVisibility"),
+			ephemeral: true,
 		});
 	}
 }
@@ -103,7 +124,7 @@ async function userRemove(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
-			ephemeral: nconf.get("messageVisibility"),
+			ephemeral: true,
 		});
 	} else {
 		nconf.set(
@@ -125,7 +146,7 @@ async function userRemove(interaction) {
 
 		await interaction.reply({
 			embeds: [embed],
-			ephemeral: nconf.get("messageVisibility"),
+			ephemeral: true,
 		});
 	}
 }
@@ -180,48 +201,9 @@ async function usersList(interaction) {
 		content: "",
 		embeds: [enabled],
 		components: [],
-		ephemeral: nconf.get("messageVisibility"),
-	});
-}
-async function hide(interaction) {
-	nconf.set("messageVisibility", true);
-
-	nconf.save();
-	let enabled = {
-		color: 0x00ff00,
-		title: "Messages will be hidden.",
-
-		footer: {
-			text: "made by ~ kacpep.dev",
-			icon_url: "https://i.imgur.com/M0uWxCA.png",
-		},
-	};
-	await interaction.reply({
-		content: "",
-		embeds: [enabled],
-		components: [],
-		ephemeral: true,
-	});
-}
-async function show(interaction) {
-	nconf.set("messageVisibility", false);
-
-	nconf.save();
-	let enabled = {
-		color: 0x00ff00,
-		title: "Messages will be visible.",
-
-		footer: {
-			text: "made by ~ kacpep.dev",
-			icon_url: "https://i.imgur.com/M0uWxCA.png",
-		},
-	};
-	await interaction.reply({
-		content: "",
-		embeds: [enabled],
-		components: [],
 		ephemeral: true,
 	});
 }
 
-module.exports = { off, on, userAdd, userRemove, usersList, hide, show };
+
+module.exports = { off, on,restart, userAdd, userRemove, usersList };

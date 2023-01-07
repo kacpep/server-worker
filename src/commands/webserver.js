@@ -10,6 +10,9 @@ module.exports = {
 		.addSubcommand((option) =>
 			option.setName("on").setDescription("Turn on the nginx.")
 		)
+		.addSubcommand((option) =>
+			option.setName("restart").setDescription("Restart  nginx.")
+		)
 		.addSubcommandGroup((option) =>
 			option
 				.setName("users")
@@ -32,17 +35,6 @@ module.exports = {
 				)
 				.addSubcommand((option) =>
 					option.setName("list").setDescription("List of users webserver.")
-				)
-		)
-		.addSubcommandGroup((option) =>
-			option
-				.setName("message-visibility")
-				.setDescription("Visibility of messages to everyone or only for one user.")
-				.addSubcommand((option) =>
-					option.setName("hiden").setDescription("Hide messages.")
-				)
-				.addSubcommand((option) =>
-					option.setName("visible").setDescription("Show messages.")
 				)
 		),
 };

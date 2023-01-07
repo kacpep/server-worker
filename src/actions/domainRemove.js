@@ -9,11 +9,7 @@ const {
 const { execSync } = require("child_process");
 const nconf = require("nconf");
 
-async function remove(interaction, domain) {
-	if (!nconf.get("messageVisibility")) {
-		await interaction.message.delete();
-		await interaction.deferReply({ ephemeral: nconf.get("messageVisibility") });
-	}
+async function 	remove(interaction, domain) {
 
 	const filePath = path.join("/var/www", domain);
 	const availablPath = path.join("/etc/nginx/sites-available", domain);
@@ -60,20 +56,13 @@ async function remove(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
-		if (!nconf.get("messageVisibility")) {
-			await interaction.editReply({
-				embeds: [Embed],
-				components: [],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		} else {
-			await interaction.update({
-				content: "",
-				embeds: [Embed],
-				components: [],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+
+		await interaction.update({
+			content: "",
+			embeds: [Embed],
+			components: [],
+			ephemeral: true,
+		});
 	} else {
 		const Embed = new EmbedBuilder()
 			.setColor(0xff0000)
@@ -105,20 +94,13 @@ async function remove(interaction, domain) {
 					.setEmoji("⚙️")
 					.setStyle(ButtonStyle.Secondary)
 			);
-		if (!nconf.get("messageVisibility")) {
-			await interaction.editReply({
-				embeds: [Embed],
-				components: [btns],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		} else {
-			await interaction.update({
-				content: "",
-				embeds: [Embed],
-				components: [btns],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+
+		await interaction.update({
+			content: "",
+			embeds: [Embed],
+			components: [btns],
+			ephemeral: true,
+		});
 	}
 }
 async function definitely(interaction, domain) {
@@ -152,19 +134,12 @@ async function definitely(interaction, domain) {
 				.setLabel("cancel")
 				.setStyle(ButtonStyle.Danger)
 		);
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			embeds: [Embed],
-			components: [btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.update({
+		content: "",
+		embeds: [Embed],
+		components: [btns],
+		ephemeral: true,
+	});
 }
 module.exports = { remove, definitely };
