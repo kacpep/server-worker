@@ -57,20 +57,12 @@ async function updateManage(interaction, domain) {
 				.setEmoji("🎚️")
 				.setStyle(ButtonStyle.Secondary)
 		);
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			embeds: [Embed],
-			components: [btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.update({
+		embeds: [Embed],
+		components: [btns],
+		ephemeral: true,
+	});
 }
 async function selectChangeProtocol(interaction, domain) {
 	let currentProtocol = "HTTPS";
@@ -133,20 +125,12 @@ async function selectChangeProtocol(interaction, domain) {
 			.setLabel("cancel")
 			.setStyle(ButtonStyle.Danger)
 	);
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			embeds: [domainEmbed],
-			components: [selectMenu, btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [domainEmbed],
-			components: [selectMenu, btns],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.update({
+		embeds: [domainEmbed],
+		components: [selectMenu, btns],
+		ephemeral: true,
+	});
 }
 async function changeToHTTP(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
@@ -187,21 +171,13 @@ async function changeToHTTP(interaction, domain) {
 			text: "made by ~ kacpep.dev",
 			iconURL: "https://i.imgur.com/M0uWxCA.png",
 		});
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	} else {
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.editReply({
+		content: "",
+		embeds: [Embed],
+		components: [],
+		ephemeral: true,
+	});
 }
 async function changeToHTTPS(interaction, domain) {
 	const filePath = path.join("/var/www", domain);
@@ -267,21 +243,13 @@ async function changeToHTTPS(interaction, domain) {
 			text: "made by ~ kacpep.dev",
 			iconURL: "https://i.imgur.com/M0uWxCA.png",
 		});
-	if (!nconf.get("messageVisibility")) {
-		await interaction.editReply({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}else{
-		await interaction.update({
-			content: "",
-			embeds: [Embed],
-			components: [],
-			ephemeral: nconf.get("messageVisibility"),
-		});
-	}
+
+	await interaction.editReply({
+		content: "",
+		embeds: [Embed],
+		components: [],
+		ephemeral: true,
+	});
 }
 async function selectPortForwarding(interaction, domain) {
 	const modal = new ModalBuilder()
@@ -306,11 +274,9 @@ async function portForwarding(interaction, domain) {
 		const availablPath = path.join("/etc/nginx/sites-available", domain);
 		let file = fs.readFileSync(availablPath, "utf8");
 		if (/location(.*?\s*)#ZW5k/gm.test(file)) {
-			if (!nconf.get("messageVisibility")) {
-				await interaction.deferReply({
-					ephemeral: nconf.get("messageVisibility"),
-				});
-			}
+			await interaction.deferReply({
+				ephemeral: true,
+			});
 
 			fs.writeFileSync(
 				availablPath,
@@ -344,21 +310,13 @@ async function portForwarding(interaction, domain) {
 					text: "made by ~ kacpep.dev",
 					iconURL: "https://i.imgur.com/M0uWxCA.png",
 				});
-			if (!nconf.get("messageVisibility")) {
-				await interaction.editReply({
-					content: "",
-					embeds: [Embed],
-					components: [],
-					ephemeral: nconf.get("messageVisibility"),
-				});
-			} else {
-				await interaction.update({
-					content: "",
-					embeds: [Embed],
-					components: [],
-					ephemeral: nconf.get("messageVisibility"),
-				});
-			}
+
+			await interaction.editReply({
+				content: "",
+				embeds: [Embed],
+				components: [],
+				ephemeral: true,
+			});
 		} else {
 			await interaction.deferReply({ ephemeral: true });
 
@@ -370,11 +328,10 @@ async function portForwarding(interaction, domain) {
 	} else {
 		const availablPath = path.join("/etc/nginx/sites-available", domain);
 		let file = fs.readFileSync(availablPath, "utf8");
-		if (!nconf.get("messageVisibility")) {
-			await interaction.deferReply({
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+
+		await interaction.deferReply({
+			ephemeral: true,
+		});
 
 		fs.writeFileSync(
 			availablPath,
@@ -408,21 +365,13 @@ async function portForwarding(interaction, domain) {
 				text: "made by ~ kacpep.dev",
 				iconURL: "https://i.imgur.com/M0uWxCA.png",
 			});
-		if (!nconf.get("messageVisibility")) {
-			await interaction.editReply({
-				content: "",
-				embeds: [Embed],
-				components: [],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		} else {
-			await interaction.update({
-				content: "",
-				embeds: [Embed],
-				components: [],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+
+		await interaction.editReply({
+			content: "",
+			embeds: [Embed],
+			components: [],
+			ephemeral: true,
+		});
 	}
 }
 module.exports = {

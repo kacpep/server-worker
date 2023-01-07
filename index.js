@@ -5,6 +5,8 @@ const nconf = require("nconf");
 const configPath = path.join(__dirname, "src/configs/config.json");
 nconf.file("default", configPath);
 
+console.log("made by ~ https://github.com/kacpep \n");
+
 let root = nconf.get("root");
 
 const {
@@ -70,7 +72,7 @@ function versionCompare(myVersion, minimumVersion) {
 }
 
 client.once(Events.ClientReady, async () => {
-	console.log("Ready!");
+	console.log(`Ready! Version: v${process.env.npm_package_version}`);
 	guild = client.guilds.cache.get(process.env.GUILD_ID);
 
 	let latestReleases = await axios.get(
@@ -223,16 +225,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		if (subCommand == "on") {
 			require("./src/actions/serverManage").on(interaction);
 		}
+		if (subCommand == "restart") {
+			require("./src/actions/serverManage").restart(interaction);
+		}
 
 		if (interaction.user.tag == root) {
-			if (subCommandGrup == "message-visibility") {
-				if (subCommand == "hiden") {
-					require("./src/actions/serverManage").hide(interaction);
-				}
-				if (subCommand == "visible") {
-					require("./src/actions/serverManage").show(interaction);
-				}
-			}
 			if (subCommandGrup == "users") {
 				if (subCommand == "add") {
 					require("./src/actions/serverManage").userAdd(interaction);
@@ -265,19 +262,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 
-	if (
-		interaction.customId === "add" ||
-		interaction.customId === "remove" ||
-		interaction.customId === "update" ||
-		interaction.customId === "changeProtocol"
-	) {
-		if (!nconf.get("messageVisibility")) {
-			await interaction.message.delete();
-
-			await interaction.deferReply({
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+	if (interaction.customId != "cancel") {
 	}
 	if (interaction.customId === "add") {
 		require("./src/actions/domainAdd").protocol(interaction, domain);
@@ -292,32 +277,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		require("./src/actions/domainRemove").remove(interaction, domain);
 	}
 	if (interaction.customId === "cancel") {
-		if (!nconf.get("messageVisibility")) {
-			await interaction.message.delete();
-		} else {
-			let enabled = {
-				color: 0xff0000,
-				title: "Canceled!",
-				footer: {
-					text: "made by ~ kacpep.dev",
-					icon_url: "https://i.imgur.com/M0uWxCA.png",
-				},
-			};
-			await interaction.update({
-				content: "",
-				embeds: [enabled],
-				components: [],
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+		let enabled = {
+			color: 0xff0000,
+			title: "Canceled!",
+			footer: {
+				text: "made by ~ kacpep.dev",
+				icon_url: "https://i.imgur.com/M0uWxCA.png",
+			},
+		};
+		await interaction.update({
+			content: "",
+			embeds: [enabled],
+			components: [],
+			ephemeral: true,
+		});
 	}
 	if (interaction.customId === "changeProtocol") {
+	
 		require("./src/actions/domainUpdate").selectChangeProtocol(
 			interaction,
 			domain
 		);
 	}
 	if (interaction.customId === "portForwarding") {
+	
 		require("./src/actions/domainUpdate").selectPortForwarding(
 			interaction,
 			domain
@@ -341,12 +324,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	let domain = interaction.message.embeds[0].data.fields[0].value;
 
 	if (interaction.customId === "selectProtocol") {
-		if (!nconf.get("messageVisibility")) {
-			await interaction.message.delete();
-			await interaction.deferReply({
-				ephemeral: nconf.get("messageVisibility"),
-			});
-		}
+		await interaction.deferReply({
+			ephemeral: true,
+		});
 
 		if (interaction.values == 443) {
 			require("./src/actions/domainAdd").addHTTPS(interaction, domain);
@@ -355,18 +335,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 	}
 	if (interaction.customId === "selectChangeProtocol") {
-		if (!nconf.get("messageVisibility")) await interaction.message.delete();
-
 		if (interaction.values == 443) {
 			if (
 				(await countLines(
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
 				)) <= 10
 			) {
-				if (!nconf.get("messageVisibility"))
-					await interaction.deferReply({
-						ephemeral: nconf.get("messageVisibility"),
-					});
+				await interaction.deferReply({
+					ephemeral: true,
+				});
 
 				require("./src/actions/domainUpdate").changeToHTTPS(
 					interaction,
@@ -385,10 +362,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					fs.createReadStream(path.join("/etc/nginx/sites-available", domain))
 				)) <= 10
 			) {
-				if (!nconf.get("messageVisibility"))
-					await interaction.deferReply({
-						ephemeral: nconf.get("messageVisibility"),
-					});
+				await interaction.deferReply({
+					ephemeral: true,
+				});
 
 				require("./src/actions/domainUpdate").changeToHTTP(interaction, domain);
 			} else {
@@ -417,7 +393,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 
 	let domain = interaction.message.embeds[0].data.fields[0].value;
-	if (!nconf.get("messageVisibility")) await interaction.message.delete();
 
 	if (interaction.customId === "modalPortForwarding") {
 		let port = interaction.fields.getTextInputValue("newPort");
@@ -445,7 +420,7 @@ function sendErrorMessage(e) {
 		const Embed = new EmbedBuilder()
 			.setColor(0xff0000)
 			.setTitle("!Error")
-			.setDescription(`${e}`)
+			.setDescription(`${e.stack}`)
 			.setThumbnail("https://i.imgur.com/w8hzuoa.png")
 			.setTimestamp()
 			.setFooter({
