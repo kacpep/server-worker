@@ -22,7 +22,7 @@ module.exports = {
 						.setName("add")
 						.setDescription("Add user to the webserver.")
 						.addUserOption((option) =>
-							option.setName("user").setDescription("Select user")
+							option.setName("user").setDescription("Select user").setRequired(true)
 						)
 				)
 				.addSubcommand((option) =>
@@ -30,7 +30,7 @@ module.exports = {
 						.setName("remove")
 						.setDescription("Remove user from the webserver.")
 						.addUserOption((option) =>
-							option.setName("user").setDescription("Select user")
+							option.setName("user").setDescription("Select user").setRequired(true)
 						)
 				)
 				.addSubcommand((option) =>
